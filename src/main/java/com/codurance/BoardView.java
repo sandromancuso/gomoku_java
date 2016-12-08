@@ -13,6 +13,7 @@ public class BoardView extends JPanel {
     public static final int WIDTH = 400;
     public static final int HEIGHT = 400;
     public static final Color BOARD_COLOR = new Color(255, 188, 83);
+    public static final int SQUARE_SIZE = WIDTH / (Board.Y_INTERSECTIONS + 1);
     private Board board;
 
     public BoardView(Board board) {
@@ -36,10 +37,9 @@ public class BoardView extends JPanel {
     }
 
     private void drawBoard(Graphics g) {
-        int squareSize = WIDTH / (Board.Y_INTERSECTIONS + 1);
         for (int i = 1; i < Board.Y_INTERSECTIONS + 1; i++) {
-            g.drawLine(squareSize, squareSize * i, WIDTH - squareSize, squareSize * i);
-            g.drawLine(squareSize * i, squareSize, squareSize * i, HEIGHT - squareSize);
+            g.drawLine(SQUARE_SIZE, SQUARE_SIZE * i, WIDTH - SQUARE_SIZE, SQUARE_SIZE * i);
+            g.drawLine(SQUARE_SIZE * i, SQUARE_SIZE, SQUARE_SIZE * i, HEIGHT - SQUARE_SIZE);
         }
     }
 
@@ -48,18 +48,16 @@ public class BoardView extends JPanel {
     }
 
     private void drawStone(Graphics g, Board.Stone stone) {
-        int squareSize = WIDTH / (Board.Y_INTERSECTIONS + 1);
-        int x = (stone.intersection().x() * squareSize) + squareSize;
-        int y = (stone.intersection().y() * squareSize) + squareSize;
+        int x = (stone.intersection().x() * SQUARE_SIZE) + SQUARE_SIZE;
+        int y = (stone.intersection().y() * SQUARE_SIZE) + SQUARE_SIZE;
 
-        int r = Math.round(squareSize / 2);
+        int r = Math.round(SQUARE_SIZE / 2);
         g.fillOval(x-(r/2), y-(r/2), r, r);
     }
 
     private void placeStone(int x, int y) {
-        int squareSize = WIDTH / (Board.Y_INTERSECTIONS + 1);
-        int intersectionX = Math.round((float)x / squareSize) - 1;
-        int intersectionY = Math.round((float)y / squareSize) - 1;
+        int intersectionX = Math.round((float)x / SQUARE_SIZE) - 1;
+        int intersectionY = Math.round((float)y / SQUARE_SIZE) - 1;
 
         Optional<Board.Intersection> intersection = Board.intersection(intersectionX, intersectionY);
         intersection.ifPresent(board::placeStoneAt);
