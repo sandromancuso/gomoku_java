@@ -1,7 +1,6 @@
 package com.codurance;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
@@ -11,18 +10,24 @@ public class Board {
     public static final int X_INTERSECTIONS = 15;
     public static final int Y_INTERSECTIONS = 15;
 
+    private Set<Stone> stones = new LinkedHashSet<>();
+
     public static Optional<Intersection> intersection(int x, int y) {
-        return (x >= 0 && x < X_INTERSECTIONS && y >= 0 && y < Y_INTERSECTIONS)
+        return withinBoardBounds(x, y)
                 ? Optional.of(new Intersection(x, y))
                 : Optional.empty();
     }
 
     public void placeStoneAt(Intersection intersection) {
-        throw new UnsupportedOperationException();
+        stones.add(new Stone(intersection));
     }
 
-    public List<Stone> stones() {
-        throw new UnsupportedOperationException();
+    public Set<Stone> stones() {
+        return Collections.unmodifiableSet(stones);
+    }
+
+    private static boolean withinBoardBounds(int x, int y) {
+        return x >= 0 && x < X_INTERSECTIONS && y >= 0 && y < Y_INTERSECTIONS;
     }
 
     public static class Stone {
@@ -35,13 +40,24 @@ public class Board {
         public Intersection intersection() {
             return intersection;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            return reflectionEquals(this, o);
+        }
+
+        @Override
+        public int hashCode() {
+            return reflectionHashCode(this);
+        }
+
     }
 
     public static class Intersection {
         private final int x;
         private final int y;
 
-        public Intersection(int x, int y) {
+        Intersection(int x, int y) {
             this.x = x;
             this.y = y;
         }
