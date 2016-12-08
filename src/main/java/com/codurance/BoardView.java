@@ -44,36 +44,16 @@ public class BoardView extends JPanel {
     }
 
     private void drawStones(Graphics g) {
-        board.stones().forEach(s -> draw(g, s));
+        board.stones().forEach(s -> drawStone(g, s));
     }
 
-    private void draw(Graphics g, Board.Stone stone) {
+    private void drawStone(Graphics g, Board.Stone stone) {
         int squareSize = WIDTH / (Board.Y_INTERSECTIONS + 1);
-        int xx = (stone.intersection().x() * squareSize) + squareSize;
-        int yy = (stone.intersection().y() * squareSize) + squareSize;
+        int x = (stone.intersection().x() * squareSize) + squareSize;
+        int y = (stone.intersection().y() * squareSize) + squareSize;
 
-//        Graphics2D g = (Graphics2D) getGraphics();
         int r = Math.round(squareSize / 2);
-        xx = xx-(r/2);
-        yy = yy-(r/2);
-        g.fillOval(xx,yy,r,r);
-    }
-
-    private void drawStone(int x, int y) {
-        int squareSize = WIDTH / (Board.Y_INTERSECTIONS + 1);
-        int intersectionX = Math.round((float)x / squareSize) - 1;
-        int intersectionY = Math.round((float)y / squareSize) - 1;
-        System.out.println("x = " + intersectionX + ", y = " + intersectionY);
-
-
-        int xx = (intersectionX * squareSize) + squareSize;
-        int yy = (intersectionY * squareSize) + squareSize;
-
-        Graphics2D g = (Graphics2D) getGraphics();
-        int r = Math.round(squareSize / 2);
-        xx = xx-(r/2);
-        yy = yy-(r/2);
-        g.fillOval(xx,yy,r,r);
+        g.fillOval(x-(r/2), y-(r/2), r, r);
     }
 
     private void placeStone(int x, int y) {
@@ -83,13 +63,14 @@ public class BoardView extends JPanel {
 
         Optional<Board.Intersection> intersection = Board.intersection(intersectionX, intersectionY);
         intersection.ifPresent(board::placeStoneAt);
+
+        repaint();
     }
 
     private class BoardMouseAdapter extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
             placeStone(e.getX(), e.getY());
-            drawStone(e.getX(), e.getY());
         }
 
     }
