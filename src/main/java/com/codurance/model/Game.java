@@ -4,17 +4,23 @@ import java.util.Set;
 
 public class Game {
     private Board board;
+    private Player currentPlayer = Player.BLACK;
 
     public Game(Board board) {
         this.board = board;
     }
 
     public Player currentPlayer() {
-        return Player.BLACK;
+        return currentPlayer;
     }
 
     public void placeStoneAt(Board.Intersection intersection) {
         board.placeStoneAt(intersection);
+        switchPlayers();
+    }
+
+    private void switchPlayers() {
+        currentPlayer = (currentPlayer() == Player.BLACK) ? Player.WHITE : Player.BLACK;
     }
 
     public Set<Stone> stones() {
