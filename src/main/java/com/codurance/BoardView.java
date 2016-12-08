@@ -14,10 +14,11 @@ public class BoardView extends JPanel {
     public static final int HEIGHT = 400;
     public static final Color BOARD_COLOR = new Color(255, 188, 83);
     public static final int SQUARE_SIZE = WIDTH / (Board.Y_INTERSECTIONS + 1);
-    private Board board;
 
-    public BoardView(Board board) {
-        this.board = board;
+    private Game game;
+
+    public BoardView(Game game) {
+        this.game = game;
         initialiseView();
     }
 
@@ -44,7 +45,7 @@ public class BoardView extends JPanel {
     }
 
     private void drawStones(Graphics g) {
-        board.stones().forEach(s -> drawStone(g, s));
+        game.stones().forEach(s -> drawStone(g, s));
     }
 
     private void drawStone(Graphics g, Stone stone) {
@@ -60,7 +61,7 @@ public class BoardView extends JPanel {
         int intersectionY = Math.round((float)y / SQUARE_SIZE) - 1;
 
         Optional<Board.Intersection> intersection = Board.intersection(intersectionX, intersectionY);
-        intersection.ifPresent(board::placeStoneAt);
+        intersection.ifPresent(game::placeStoneAt);
 
         repaint();
     }

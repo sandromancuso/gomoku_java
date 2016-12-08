@@ -2,14 +2,18 @@ package com.codurance;
 
 import javax.swing.*;
 
+import java.awt.*;
+
 import static java.awt.Color.BLACK;
 import static java.awt.Color.WHITE;
 
 public class Header extends JPanel {
 
     private final JLabel label = new JLabel("Some message");
+    private Game game;
 
-    public Header() {
+    public Header(Game game) {
+        this.game = game;
         initialise();
     }
 
@@ -19,5 +23,11 @@ public class Header extends JPanel {
         add(Box.createVerticalStrut(80));
         label.setForeground(WHITE);
         add(label);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        label.setText(game.currentPlayer() + "'s turn");
     }
 }
