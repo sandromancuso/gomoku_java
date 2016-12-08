@@ -7,7 +7,7 @@ class GameFrame {
 
     private static final Component SCREEN_CENTER = null;
     private static final int WIDTH = 400;
-    private static final int HEIGHT = 500;
+    private static final int HEIGHT = 520;
     private static final String GAME_TITLE = "Gomoku";
     private JFrame frame;
     private JPanel mainPanel;

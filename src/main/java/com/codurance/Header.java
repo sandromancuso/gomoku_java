@@ -2,7 +2,8 @@ package com.codurance;
 
 import javax.swing.*;
 
-import static java.awt.Color.YELLOW;
+import static java.awt.Color.BLACK;
+import static java.awt.Color.WHITE;
 
 public class Header extends JPanel {
 
@@ -13,9 +14,10 @@ public class Header extends JPanel {
     }
 
     private void initialise() {
-        setBackground(YELLOW);
+        setBackground(BLACK);
         setSize(400, 100);
         add(Box.createVerticalStrut(80));
+        label.setForeground(WHITE);
         add(label);
     }
 }
