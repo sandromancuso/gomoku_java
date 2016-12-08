@@ -15,10 +15,10 @@ import static java.awt.Color.BLACK;
 
 public class BoardView extends JPanel {
 
-    public static final int WIDTH = 400;
-    public static final int HEIGHT = 400;
-    public static final Color BOARD_COLOR = new Color(255, 188, 83);
-    public static final int SQUARE_SIZE = WIDTH / (Board.Y_INTERSECTIONS + 1);
+    private static final int WIDTH = 400;
+    private static final int HEIGHT = 400;
+    private static final Color BOARD_COLOR = new Color(255, 188, 83);
+    private static final int SQUARE_SIZE = WIDTH / (Board.Y_INTERSECTIONS + 1);
 
     private Game game;
 
