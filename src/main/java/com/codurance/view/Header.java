@@ -1,4 +1,6 @@
-package com.codurance;
+package com.codurance.view;
+
+import com.codurance.model.Game;
 
 import javax.swing.*;
 

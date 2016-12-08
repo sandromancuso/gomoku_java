@@ -1,9 +1,9 @@
-package com.codurance;
+package com.codurance.view;
 
 import javax.swing.*;
 import java.awt.*;
 
-class GameFrame {
+public class GameFrame {
 
     private static final Component SCREEN_CENTER = null;
     private static final int WIDTH = 400;
@@ -12,7 +12,7 @@ class GameFrame {
     private JFrame frame;
     private JPanel mainPanel;
 
-    GameFrame(JPanel header, JPanel board) {
+    public GameFrame(JPanel header, JPanel board) {
         initialiseFrame();
         mainPanel = new JPanel();
         mainPanel.setLayout(null);
@@ -30,7 +30,7 @@ class GameFrame {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    void setVisible() {
+    public void setVisible() {
         frame.setVisible(true);
     }
 }

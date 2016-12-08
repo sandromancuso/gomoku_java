@@ -1,4 +1,4 @@
-package com.codurance;
+package com.codurance.model;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;

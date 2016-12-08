@@ -1,6 +1,6 @@
-package com.codurance;
+package com.codurance.model;
 
-import com.codurance.Board.Intersection;
+import com.codurance.model.Board.Intersection;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Before;
