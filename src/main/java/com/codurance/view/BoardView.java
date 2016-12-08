@@ -2,6 +2,7 @@ package com.codurance.view;
 
 import com.codurance.model.Board;
 import com.codurance.model.Game;
+import com.codurance.model.Player;
 import com.codurance.model.Stone;
 
 import javax.swing.*;
@@ -56,8 +57,14 @@ public class BoardView extends JPanel {
         int x = (stone.intersection().x() * SQUARE_SIZE) + SQUARE_SIZE;
         int y = (stone.intersection().y() * SQUARE_SIZE) + SQUARE_SIZE;
 
+        Color color = (stone.player() == Player.BLACK) ? Color.BLACK : Color.WHITE;
+        setForeground(color);
+
+        g.setColor(color);
         int r = Math.round(SQUARE_SIZE / 2);
         g.fillOval(x-(r/2), y-(r/2), r, r);
+
+        setForeground(Color.BLACK);
     }
 
     private void placeStone(int x, int y) {

@@ -18,8 +18,16 @@ public class Board {
                 : Optional.empty();
     }
 
-    public void placeStoneAt(Intersection intersection) {
-        stones.add(new Stone(intersection));
+    public boolean placeStoneAt(Intersection intersection, Player currentPlayer) {
+        if (stoneCanBePlacedAt(intersection)) {
+            stones.add(new Stone(intersection, currentPlayer));
+            return true;
+        }
+        return false;
+    }
+
+    private boolean stoneCanBePlacedAt(Intersection intersection) {
+        return stones.stream().noneMatch(s -> s.intersection().equals(intersection));
     }
 
     public Set<Stone> stones() {

@@ -52,11 +52,11 @@ public class BoardShould {
     accept_accept_stones_to_be_placed_on_a_given_intersection() {
         Intersection intersection_1x1 = Board.intersection(1, 1).get();
         Intersection intersection_2x2 = Board.intersection(2, 2).get();
-        Stone stone_at_1x1 = new Stone(intersection_1x1);
-        Stone stone_at_2x2 = new Stone(intersection_2x2);
+        Stone stone_at_1x1 = new Stone(intersection_1x1, Player.BLACK);
+        Stone stone_at_2x2 = new Stone(intersection_2x2, Player.WHITE);
 
-        board.placeStoneAt(intersection_1x1);
-        board.placeStoneAt(intersection_2x2);
+        board.placeStoneAt(intersection_1x1, Player.BLACK);
+        board.placeStoneAt(intersection_2x2, Player.WHITE);
 
         assertThat(board.stones().contains(stone_at_1x1), is(true));
         assertThat(board.stones().contains(stone_at_2x2), is(true));
@@ -65,10 +65,11 @@ public class BoardShould {
     @Test public void
     not_accept_more_than_one_stone_on_an_intersection() {
         Intersection intersection_1x1 = Board.intersection(1, 1).get();
-        Stone stone_at_1x1 = new Stone(intersection_1x1);
+        Stone stone_at_1x1 = new Stone(intersection_1x1, Player.BLACK);
 
-        board.placeStoneAt(intersection_1x1);
-        board.placeStoneAt(intersection_1x1);
+        board.placeStoneAt(intersection_1x1, Player.BLACK);
+        board.placeStoneAt(intersection_1x1, Player.BLACK);
+        board.placeStoneAt(intersection_1x1, Player.WHITE);
 
         assertThat(board.stones().contains(stone_at_1x1), is(true));
         assertThat(board.stones().size(), is(1));

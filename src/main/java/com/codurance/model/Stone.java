@@ -5,13 +5,19 @@ import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode
 
 public class Stone {
     private Board.Intersection intersection;
+    private Player player;
 
-    public Stone(Board.Intersection intersection) {
+    public Stone(Board.Intersection intersection, Player player) {
         this.intersection = intersection;
+        this.player = player;
     }
 
     public Board.Intersection intersection() {
         return intersection;
+    }
+
+    public Player player() {
+        return player;
     }
 
     @Override
@@ -23,5 +29,4 @@ public class Stone {
     public int hashCode() {
         return reflectionHashCode(this);
     }
-
 }

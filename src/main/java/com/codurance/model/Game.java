@@ -15,8 +15,9 @@ public class Game {
     }
 
     public void placeStoneAt(Board.Intersection intersection) {
-        board.placeStoneAt(intersection);
-        switchPlayers();
+        if (board.placeStoneAt(intersection, currentPlayer)) {
+            switchPlayers();
+        }
     }
 
     private void switchPlayers() {
@@ -27,7 +28,4 @@ public class Game {
         return board.stones();
     }
 
-    public enum Player {
-        WHITE, BLACK;
-    }
 }
