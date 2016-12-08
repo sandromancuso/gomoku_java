@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Optional;
 
 import static java.awt.Color.BLACK;
 
@@ -31,6 +32,7 @@ public class BoardView extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawBoard(g);
+        drawStones(g);
     }
 
     private void drawBoard(Graphics g) {
@@ -39,6 +41,22 @@ public class BoardView extends JPanel {
             g.drawLine(squareSize, squareSize * i, WIDTH - squareSize, squareSize * i);
             g.drawLine(squareSize * i, squareSize, squareSize * i, HEIGHT - squareSize);
         }
+    }
+
+    private void drawStones(Graphics g) {
+        board.stones().forEach(s -> draw(g, s));
+    }
+
+    private void draw(Graphics g, Board.Stone stone) {
+        int squareSize = WIDTH / (Board.Y_INTERSECTIONS + 1);
+        int xx = (stone.intersection().x() * squareSize) + squareSize;
+        int yy = (stone.intersection().y() * squareSize) + squareSize;
+
+//        Graphics2D g = (Graphics2D) getGraphics();
+        int r = Math.round(squareSize / 2);
+        xx = xx-(r/2);
+        yy = yy-(r/2);
+        g.fillOval(xx,yy,r,r);
     }
 
     private void drawStone(int x, int y) {
@@ -58,11 +76,22 @@ public class BoardView extends JPanel {
         g.fillOval(xx,yy,r,r);
     }
 
+    private void placeStone(int x, int y) {
+        int squareSize = WIDTH / (Board.Y_INTERSECTIONS + 1);
+        int intersectionX = Math.round((float)x / squareSize) - 1;
+        int intersectionY = Math.round((float)y / squareSize) - 1;
+
+        Optional<Board.Intersection> intersection = Board.intersection(intersectionX, intersectionY);
+        intersection.ifPresent(board::placeStoneAt);
+    }
+
     private class BoardMouseAdapter extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
+            placeStone(e.getX(), e.getY());
             drawStone(e.getX(), e.getY());
         }
+
     }
 
 }
