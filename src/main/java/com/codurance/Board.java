@@ -30,29 +30,6 @@ public class Board {
         return x >= 0 && x < X_INTERSECTIONS && y >= 0 && y < Y_INTERSECTIONS;
     }
 
-    public static class Stone {
-        private Intersection intersection;
-
-        public Stone(Intersection intersection) {
-            this.intersection = intersection;
-        }
-
-        public Intersection intersection() {
-            return intersection;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return reflectionEquals(this, o);
-        }
-
-        @Override
-        public int hashCode() {
-            return reflectionHashCode(this);
-        }
-
-    }
-
     public static class Intersection {
         private final int x;
         private final int y;

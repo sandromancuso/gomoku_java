@@ -47,7 +47,7 @@ public class BoardView extends JPanel {
         board.stones().forEach(s -> drawStone(g, s));
     }
 
-    private void drawStone(Graphics g, Board.Stone stone) {
+    private void drawStone(Graphics g, Stone stone) {
         int x = (stone.intersection().x() * SQUARE_SIZE) + SQUARE_SIZE;
         int y = (stone.intersection().y() * SQUARE_SIZE) + SQUARE_SIZE;
 
