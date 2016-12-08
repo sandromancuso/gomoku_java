@@ -12,13 +12,14 @@ public class GameFrame {
     private JFrame frame;
     private JPanel mainPanel;
 
-    public GameFrame(JPanel header, JPanel board) {
+    public GameFrame(Header header, BoardView boardView) {
         initialiseFrame();
         mainPanel = new JPanel();
         mainPanel.setLayout(null);
         mainPanel.add(header);
-        mainPanel.add(board);
+        mainPanel.add(boardView);
         frame.add(mainPanel);
+        boardView.addObserver(header);
     }
 
     private void initialiseFrame() {

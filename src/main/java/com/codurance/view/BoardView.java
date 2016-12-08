@@ -9,7 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Optional;
+import java.util.*;
+import java.util.List;
 
 import static java.awt.Color.BLACK;
 
@@ -21,10 +22,15 @@ public class BoardView extends JPanel {
     private static final int SQUARE_SIZE = WIDTH / (Board.Y_INTERSECTIONS + 1);
 
     private Game game;
+    private List<Observer> observers = new ArrayList<>();
 
     public BoardView(Game game) {
         this.game = game;
         initialiseView();
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
     }
 
     private void initialiseView() {
@@ -75,6 +81,11 @@ public class BoardView extends JPanel {
         intersection.ifPresent(game::placeStoneAt);
 
         repaint();
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        observers.forEach(o -> o.update(new Observable(), null));
     }
 
     private class BoardMouseAdapter extends MouseAdapter {

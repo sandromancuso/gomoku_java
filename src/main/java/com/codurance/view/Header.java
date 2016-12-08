@@ -5,11 +5,13 @@ import com.codurance.model.Game;
 import javax.swing.*;
 
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
 import static java.awt.Color.BLACK;
 import static java.awt.Color.WHITE;
 
-public class Header extends JPanel {
+public class Header extends JPanel implements Observer {
 
     private final JLabel label = new JLabel("Some message");
     private Game game;
@@ -31,5 +33,10 @@ public class Header extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         label.setText(game.currentPlayer() + "'s turn");
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        repaint();
     }
 }
