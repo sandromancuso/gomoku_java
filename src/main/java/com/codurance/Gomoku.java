@@ -3,10 +3,12 @@ package com.codurance;
 public class Gomoku {
 
     public static void main(String[] args) {
-        Header header = new Header();
         Board board = new Board();
 
-        GameFrame gameFrame = new GameFrame(header, board);
+        Header header = new Header();
+        BoardView boardView = new BoardView(board);
+
+        GameFrame gameFrame = new GameFrame(header, boardView);
 
         gameFrame.setVisible();
     }
