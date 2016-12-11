@@ -67,7 +67,7 @@ public class BoardView extends JPanel {
         setForeground(color);
 
         g.setColor(color);
-        int r = Math.round(SQUARE_SIZE / 2);
+        int r = Math.round(SQUARE_SIZE / 1.5f);
         g.fillOval(x-(r/2), y-(r/2), r, r);
 
         setForeground(Color.BLACK);

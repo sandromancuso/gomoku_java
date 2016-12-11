@@ -38,6 +38,12 @@ public class Board {
         return x >= 0 && x < X_INTERSECTIONS && y >= 0 && y < Y_INTERSECTIONS;
     }
 
+    public Optional<Stone> stoneAt(Optional<Intersection> intersection) {
+        return stones.stream()
+                        .filter(s -> s.intersection().equals(intersection.get()))
+                        .findFirst();
+    }
+
     public static class Intersection {
         private final int x;
         private final int y;

@@ -29,4 +29,12 @@ public class Stone {
     public int hashCode() {
         return reflectionHashCode(this);
     }
+
+    @Override
+    public String toString() {
+        return "Stone{" +
+                "intersection=" + intersection +
+                ", player=" + player +
+                '}';
+    }
 }

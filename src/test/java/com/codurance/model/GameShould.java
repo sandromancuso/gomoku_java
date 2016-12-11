@@ -2,27 +2,38 @@ package com.codurance.model;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static com.codurance.model.Player.BLACK;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GameShould {
 
-    public static final Board.Intersection INTERSECTION_1x1 = Board.intersection(1, 1).get();
-    public static final Board.Intersection INTERSECTION_2x2 = Board.intersection(2, 2).get();
+    private static final Board.Intersection INTERSECTION_1x1 = Board.intersection(1, 1).get();
+    private static final Board.Intersection INTERSECTION_2x2 = Board.intersection(2, 2).get();
+
+    @Mock
+    private Rules rules;
+
+    private Board board;
 
     private Game game;
 
     @Before
     public void initialise() {
-        game = new Game(new Board());
+        board = new Board();
+        game = new Game(board, rules);
     }
 
     @Test public void
     start_with_back_player_as_the_first_player() {
-        Game game = new Game(new Board());
-
         assertThat(game.currentPlayer(), is(BLACK));
     }
 
@@ -55,6 +66,20 @@ public class GameShould {
         game.placeStoneAt(INTERSECTION_1x1);
 
         assertThat(game.currentPlayer(), is(Player.WHITE));
+    }
+
+    @Test public void
+    return_no_winner_if_there_are_no_five_stones_in_a_row_for_any_player() {
+        given(rules.winner(board)).willReturn(Optional.empty());
+
+        assertThat(game.winner().isPresent(), is(false));
+    }
+
+    @Test public void
+    return_winner_if_there_are_five_stones_in_a_row_for_any_player() {
+        given(rules.winner(board)).willReturn(Optional.of(Player.BLACK));
+
+        assertThat(game.winner().get(), is(Player.BLACK));
     }
 
 }
