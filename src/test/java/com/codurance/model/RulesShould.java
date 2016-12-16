@@ -65,13 +65,102 @@ public class RulesShould {
         assertThat(rules.winner(board).isPresent(), is(false));
     }
 
+    @Test public void
+    diagonal_top_right() {
+        placeStone(0, 0, BLACK);
+        placeStone(1, 1, BLACK);
+        placeStone(2, 2, BLACK);
+        placeStone(3, 3, BLACK);
+        placeStone(4, 4, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        resetBoard();
+        placeStone(10, 10, BLACK);
+        placeStone(11, 11, BLACK);
+        placeStone(12, 12, BLACK);
+        placeStone(13, 13, BLACK);
+        placeStone(14, 14, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        resetBoard();
+        placeStone(4, 0, BLACK);
+        placeStone(5, 1, BLACK);
+        placeStone(6, 2, BLACK);
+        placeStone(7, 3, BLACK);
+        placeStone(8, 4, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        resetBoard();
+        placeStone(10, 10, BLACK);
+        placeStone(11, 11, BLACK);
+        placeStone(12, 12, WHITE);
+        placeStone(13, 13, BLACK);
+        placeStone(14, 14, BLACK);
+        assertThat(rules.winner(board).isPresent(), is(false));
+    }
+
+    @Test public void
+    diagonal_left_bottom() {
+        resetBoard();
+        placeStone(0, 10, BLACK);
+        placeStone(1, 11, BLACK);
+        placeStone(2, 12, BLACK);
+        placeStone(3, 13, BLACK);
+        placeStone(4, 14, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+    }
+
+    @Test public void
+    diagonal_top_left() {
+        placeStone(14, 0, BLACK);
+        placeStone(13, 1, BLACK);
+        placeStone(12, 2, BLACK);
+        placeStone(11, 3, BLACK);
+        placeStone(10, 4, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        resetBoard();
+        placeStone(9, 0, BLACK);
+        placeStone(8, 1, BLACK);
+        placeStone(7, 2, BLACK);
+        placeStone(6, 3, BLACK);
+        placeStone(5, 4, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        resetBoard();
+        placeStone(10, 10, BLACK);
+        placeStone(11, 11, BLACK);
+        placeStone(12, 12, BLACK);
+        placeStone(13, 13, BLACK);
+        placeStone(14, 14, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        resetBoard();
+        placeStone(0, 10, BLACK);
+        placeStone(1, 11, BLACK);
+        placeStone(2, 12, BLACK);
+        placeStone(3, 13, BLACK);
+        placeStone(4, 14, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+    }
+
+    @Test public void
+    diagonal_bottom_right() {
+        placeStone(12, 7, BLACK);
+        placeStone(11, 8, BLACK);
+        placeStone(10, 9, BLACK);
+        placeStone( 9, 10, BLACK);
+        placeStone( 8, 11, BLACK);
+        assertThat(rules.winner(board).get(), is(BLACK));
+    }
+
     private void resetBoard() {
         board = new Board();
     }
 
     private void horizontalStones(int numberOfStones, int xOffset, int y, Player player) {
         for (int x = xOffset; x < numberOfStones + xOffset; x++) {
-            board.placeStoneAt(intersection(x, y).get(), player);
+            placeStone(x, y, player);
         }
     }
 
@@ -81,12 +170,16 @@ public class RulesShould {
 
     private void verticalStones(int numberOfStones, int yOffset, int x, Player player) {
         for (int y = yOffset; y < numberOfStones + yOffset; y++) {
-            board.placeStoneAt(intersection(x, y).get(), player);
+            placeStone(x, y, player);
         }
     }
 
     private void verticalStones(int numberOfStones, int x, Player player) {
-        horizontalStones(numberOfStones, 0, x, player);
+        verticalStones(numberOfStones, 0, x, player);
+    }
+
+    private void placeStone(int x, int y, Player player) {
+        board.placeStoneAt(intersection(x, y).get(), player);
     }
 
 }

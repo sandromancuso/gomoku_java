@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.codurance.model.Board.X_INTERSECTIONS;
-import static com.codurance.model.Board.Y_INTERSECTIONS;
-import static com.codurance.model.Board.intersection;
+import static com.codurance.model.Board.*;
 import static com.codurance.model.Player.BLACK;
 import static com.codurance.model.Player.WHITE;
 import static java.util.Collections.indexOfSubList;
@@ -21,54 +19,111 @@ public class Rules {
 
     public Optional<Player> winner(Board board) {
         Optional<Player> winner = winnerForHorizontalLines(board);
-        if (!winner.isPresent()) {
-            winner = winnerForVerticalLines(board);
+        if (winner.isPresent()) {
+            return winner;
         }
-        return winner;
+
+        winner = winnerForVerticalLines(board);
+        if (winner.isPresent()) {
+            return winner;
+        }
+
+        return winnerForDiagonalLines(board);
     }
 
     private Optional<Player> winnerForVerticalLines(Board board) {
-        Optional<Player> winner = Optional.empty();
-        List<Optional<Stone>> boardStones = new ArrayList<>();
-        for (int x = 0; x < X_INTERSECTIONS - 1; x++) {
-            for (int y = 0; y < Y_INTERSECTIONS - 1; y++) {
-                boardStones.add(board.stoneAt(intersection(x, y)));
+        List<List<Optional<Stone>>> verticalLines = new ArrayList<>();
+        List<Optional<Stone>> verticalLine;
+        for (int y = 0; y < Y_INTERSECTIONS - 1; y++) {
+            verticalLine = new ArrayList<>();
+            for (int x = 0; x < X_INTERSECTIONS - 1; x++) {
+                verticalLine.add(board.stoneAt(intersection(x, y)));
             }
-            winner = winnerFor(boardStones);
-            if (winner.isPresent()) {
-                return winner;
-            }
-            boardStones.clear();
+            verticalLines.add(verticalLine);
         }
-        return winner;
+        return winnerFor(verticalLines);
     }
 
     private Optional<Player> winnerForHorizontalLines(Board board) {
-        Optional<Player> winner = Optional.empty();
-        List<Optional<Stone>> boardStones = new ArrayList<>();
-        for (int y = 0; y < Y_INTERSECTIONS - 1; y++) {
-            for (int x = 0; x < X_INTERSECTIONS - 1; x++) {
-                boardStones.add(board.stoneAt(intersection(x, y)));
+        List<List<Optional<Stone>>> horizontalLines = new ArrayList<>();
+        List<Optional<Stone>> horizontalLine;
+        for (int x = 0; x < X_INTERSECTIONS - 1; x++) {
+            horizontalLine = new ArrayList<>();
+            for (int y = 0; y < Y_INTERSECTIONS - 1; y++) {
+                horizontalLine.add(board.stoneAt(intersection(x, y)));
             }
-            winner = winnerFor(boardStones);
+            horizontalLines.add(horizontalLine);
+        }
+        return winnerFor(horizontalLines);
+    }
+
+    private Optional<Player> winnerForDiagonalLines(Board board) {
+        List<List<Optional<Stone>>> lines = diagonalTopLeftToBottomRight(board);
+        lines.addAll(diagonalTopRightToBottomLeft(board));
+        return winnerFor(lines);
+    }
+
+    private List<List<Optional<Stone>>> diagonalTopLeftToBottomRight(Board board) {
+        List<List<Optional<Stone>>> lines = new ArrayList<>();
+        for (int xOffset = 0; xOffset <= X_INTERSECTIONS - 5; xOffset++) {
+            List<Optional<Stone>> line = new ArrayList<>();
+            for (int x = xOffset, y = 0; x <= X_INTERSECTIONS - 1; x++, y++) {
+                line.add(board.stoneAt(Board.intersection(x, y)));
+            }
+            lines.add(line);
+        }
+
+        for (int yOffset = 0; yOffset <= Y_INTERSECTIONS - 5; yOffset++) {
+            List<Optional<Stone>> line = new ArrayList<>();
+            for (int x = 0, y = yOffset; y <= Y_INTERSECTIONS - 1; x++, y++) {
+                line.add(board.stoneAt(Board.intersection(x, y)));
+            }
+            lines.add(line);
+        }
+        return lines;
+    }
+
+    private List<List<Optional<Stone>>> diagonalTopRightToBottomLeft(Board board) {
+        List<List<Optional<Stone>>> lines = new ArrayList<>();
+        for (int xOffset = X_INTERSECTIONS - 1; xOffset >= 4; xOffset--) {
+            List<Optional<Stone>> line = new ArrayList<>();
+            for (int x = xOffset, y = 0; x >= 0; x--, y++) {
+                line.add(board.stoneAt(Board.intersection(x, y)));
+            }
+            lines.add(line);
+        }
+
+        for (int yOffset = 0; yOffset <= Y_INTERSECTIONS - 5; yOffset++) {
+            List<Optional<Stone>> line = new ArrayList<>();
+            for (int x = X_INTERSECTIONS - 1, y = yOffset; y <= Y_INTERSECTIONS - 1; x--, y++) {
+                line.add(board.stoneAt(Board.intersection(x, y)));
+            }
+            lines.add(line);
+        }
+        return lines;
+    }
+
+    private Optional<Player> winnerFor(List<List<Optional<Stone>>> lines) {
+        Optional<Player> winner = Optional.empty();
+        for (List<Optional<Stone>> line : lines) {
+            winner = winnerForLine(line);
             if (winner.isPresent()) {
                 return winner;
             }
-            boardStones.clear();
         }
         return winner;
     }
 
-    private Optional<Player> winnerFor(List<Optional<Stone>> boardStones) {
-        List<Player> players = boardStones.stream()
+    private Optional<Player> winnerForLine(List<Optional<Stone>> boardLine) {
+        List<Player> stonesInLine = boardLine.stream()
                 .map(optionalStone -> (optionalStone.isPresent())
                         ? optionalStone.get().player()
                         : null)
                 .collect(Collectors.toList());
 
-        if (indexOfSubList(players, FIVE_BLACK) >= 0) {
+        if (indexOfSubList(stonesInLine, FIVE_BLACK) >= 0) {
             return Optional.of(BLACK);
-        } else if (indexOfSubList(players, FIVE_WHITE) >= 0) {
+        } else if (indexOfSubList(stonesInLine, FIVE_WHITE) >= 0) {
             return Optional.of(WHITE);
         } else {
             return Optional.empty();
