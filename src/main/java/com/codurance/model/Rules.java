@@ -1,9 +1,6 @@
 package com.codurance.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.codurance.model.Board.*;
@@ -16,22 +13,15 @@ public class Rules {
     private static final List<Player> FIVE_BLACK = Arrays.asList(BLACK, BLACK, BLACK, BLACK, BLACK);
     private static final List<Player> FIVE_WHITE = Arrays.asList(WHITE, WHITE, WHITE, WHITE, WHITE);
 
-
     public Optional<Player> winner(Board board) {
-        Optional<Player> winner = winnerForHorizontalLines(board);
-        if (winner.isPresent()) {
-            return winner;
-        }
-
-        winner = winnerForVerticalLines(board);
-        if (winner.isPresent()) {
-            return winner;
-        }
-
-        return winnerForDiagonalLines(board);
+        List<List<Optional<Stone>>> lines = new ArrayList<>();
+        lines.addAll(winnerForHorizontalLines(board));
+        lines.addAll(winnerForVerticalLines(board));
+        lines.addAll(winnerForDiagonalLines(board));
+        return winnerFor(lines);
     }
 
-    private Optional<Player> winnerForVerticalLines(Board board) {
+    private List<List<Optional<Stone>>> winnerForVerticalLines(Board board) {
         List<List<Optional<Stone>>> verticalLines = new ArrayList<>();
         List<Optional<Stone>> verticalLine;
         for (int y = 0; y < Y_INTERSECTIONS - 1; y++) {
@@ -41,10 +31,10 @@ public class Rules {
             }
             verticalLines.add(verticalLine);
         }
-        return winnerFor(verticalLines);
+        return verticalLines;
     }
 
-    private Optional<Player> winnerForHorizontalLines(Board board) {
+    private List<List<Optional<Stone>>> winnerForHorizontalLines(Board board) {
         List<List<Optional<Stone>>> horizontalLines = new ArrayList<>();
         List<Optional<Stone>> horizontalLine;
         for (int x = 0; x < X_INTERSECTIONS - 1; x++) {
@@ -54,13 +44,13 @@ public class Rules {
             }
             horizontalLines.add(horizontalLine);
         }
-        return winnerFor(horizontalLines);
+        return horizontalLines;
     }
 
-    private Optional<Player> winnerForDiagonalLines(Board board) {
+    private List<List<Optional<Stone>>> winnerForDiagonalLines(Board board) {
         List<List<Optional<Stone>>> lines = diagonalTopLeftToBottomRight(board);
         lines.addAll(diagonalTopRightToBottomLeft(board));
-        return winnerFor(lines);
+        return lines;
     }
 
     private List<List<Optional<Stone>>> diagonalTopLeftToBottomRight(Board board) {
