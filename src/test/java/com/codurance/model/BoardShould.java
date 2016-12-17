@@ -86,9 +86,9 @@ public class BoardShould {
         board.placeStoneAt(black.intersection(), black.player());
         board.placeStoneAt(white.intersection(), white.player());
 
-        assertThat(board.stoneAt(intersection(0, 0)), is(Optional.of(black)));
-        assertThat(board.stoneAt(intersection(1, 1)), is(Optional.empty()));
-        assertThat(board.stoneAt(intersection(2, 2)), is(Optional.of(white)));
+        assertThat(board.stoneAt(intersection(0, 0).get()), is(Optional.of(black)));
+        assertThat(board.stoneAt(intersection(1, 1).get()), is(Optional.empty()));
+        assertThat(board.stoneAt(intersection(2, 2).get()), is(Optional.of(white)));
     }
 
 }

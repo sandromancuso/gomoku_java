@@ -66,7 +66,7 @@ public class RulesShould {
     }
 
     @Test public void
-    diagonal_top_right() {
+    return_winner_when_five_consecutive_stones_in_a_diagonal() {
         placeStone(0, 0, BLACK);
         placeStone(1, 1, BLACK);
         placeStone(2, 2, BLACK);
@@ -97,10 +97,7 @@ public class RulesShould {
         placeStone(13, 13, BLACK);
         placeStone(14, 14, BLACK);
         assertThat(rules.winner(board).isPresent(), is(false));
-    }
 
-    @Test public void
-    diagonal_left_bottom() {
         resetBoard();
         placeStone(0, 10, BLACK);
         placeStone(1, 11, BLACK);
@@ -111,7 +108,7 @@ public class RulesShould {
     }
 
     @Test public void
-    diagonal_top_left() {
+    return_winner_when_five_consecutive_stones_in_an_anti_diagonal() {
         placeStone(14, 0, BLACK);
         placeStone(13, 1, BLACK);
         placeStone(12, 2, BLACK);
@@ -142,10 +139,7 @@ public class RulesShould {
         placeStone(3, 13, BLACK);
         placeStone(4, 14, BLACK);
         assertThat(rules.winner(board).get(), is(BLACK));
-    }
 
-    @Test public void
-    diagonal_bottom_right() {
         placeStone(12, 7, BLACK);
         placeStone(11, 8, BLACK);
         placeStone(10, 9, BLACK);

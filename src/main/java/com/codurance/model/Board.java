@@ -26,22 +26,22 @@ public class Board {
         return false;
     }
 
-    private boolean stoneCanBePlacedAt(Intersection intersection) {
-        return stones.stream().noneMatch(s -> s.intersection().equals(intersection));
-    }
-
     public Set<Stone> stones() {
         return Collections.unmodifiableSet(stones);
     }
 
-    private static boolean withinBoardBounds(int x, int y) {
-        return x >= 0 && x < X_INTERSECTIONS && y >= 0 && y < Y_INTERSECTIONS;
+    public Optional<Stone> stoneAt(Intersection intersection) {
+        return stones.stream()
+                .filter(s -> s.intersection().equals(intersection))
+                .findFirst();
     }
 
-    public Optional<Stone> stoneAt(Optional<Intersection> intersection) {
-        return stones.stream()
-                        .filter(s -> s.intersection().equals(intersection.get()))
-                        .findFirst();
+    private boolean stoneCanBePlacedAt(Intersection intersection) {
+        return stones.stream().noneMatch(s -> s.intersection().equals(intersection));
+    }
+
+    private static boolean withinBoardBounds(int x, int y) {
+        return x >= 0 && x < X_INTERSECTIONS && y >= 0 && y < Y_INTERSECTIONS;
     }
 
     public static class Intersection {

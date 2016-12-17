@@ -15,10 +15,10 @@ public class Rules {
 
     public Optional<Player> winner(Board board) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
-        lines.addAll(straightLines((x, y) -> board.stoneAt(intersection(x, y))));
-        lines.addAll(straightLines((x, y) -> board.stoneAt(intersection(y, x))));
-        lines.addAll(diagonalTopLeftToBottomRight((x, y) -> board.stoneAt(intersection(x, y))));
-        lines.addAll(diagonalTopRightToBottomLeft((x, y) -> board.stoneAt(intersection(x, y))));
+        lines.addAll(straightLines((x, y) -> board.stoneAt(intersection(x, y).get())));
+        lines.addAll(straightLines((x, y) -> board.stoneAt(intersection(y, x).get())));
+        lines.addAll(diagonalLines((x, y) -> board.stoneAt(intersection(x, y).get())));
+        lines.addAll(antiDiagonalLines((x, y) -> board.stoneAt(intersection(x, y).get())));
         return winnerFor(lines);
     }
 
@@ -39,7 +39,7 @@ public class Rules {
         return lines;
     }
 
-    private List<List<Optional<Stone>>> diagonalTopLeftToBottomRight(StoneRetriever stoneRetriever) {
+    private List<List<Optional<Stone>>> diagonalLines(StoneRetriever stoneRetriever) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
         List<Optional<Stone>> line;
         for (int xOffset = 0; xOffset <= X_INTERSECTIONS - 5; xOffset++) {
@@ -60,7 +60,7 @@ public class Rules {
         return lines;
     }
 
-    private List<List<Optional<Stone>>> diagonalTopRightToBottomLeft(StoneRetriever stoneRetriever) {
+    private List<List<Optional<Stone>>> antiDiagonalLines(StoneRetriever stoneRetriever) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
         for (int xOffset = X_INTERSECTIONS - 1; xOffset >= 4; xOffset--) {
             List<Optional<Stone>> line = new ArrayList<>();
