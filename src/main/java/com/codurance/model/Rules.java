@@ -15,50 +15,36 @@ public class Rules {
 
     public Optional<Player> winner(Board board) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
-        lines.addAll(winnerForHorizontalLines(board));
-        lines.addAll(winnerForVerticalLines(board));
-        lines.addAll(winnerForDiagonalLines(board));
+        lines.addAll(straightLines((x, y) -> board.stoneAt(intersection(x, y))));
+        lines.addAll(straightLines((x, y) -> board.stoneAt(intersection(y, x))));
+        lines.addAll(diagonalTopLeftToBottomRight((x, y) -> board.stoneAt(intersection(x, y))));
+        lines.addAll(diagonalTopRightToBottomLeft((x, y) -> board.stoneAt(intersection(x, y))));
         return winnerFor(lines);
     }
 
-    private List<List<Optional<Stone>>> winnerForVerticalLines(Board board) {
-        List<List<Optional<Stone>>> verticalLines = new ArrayList<>();
-        List<Optional<Stone>> verticalLine;
-        for (int y = 0; y < Y_INTERSECTIONS - 1; y++) {
-            verticalLine = new ArrayList<>();
-            for (int x = 0; x < X_INTERSECTIONS - 1; x++) {
-                verticalLine.add(board.stoneAt(intersection(x, y)));
-            }
-            verticalLines.add(verticalLine);
-        }
-        return verticalLines;
+    interface StoneRetriever {
+        Optional<Stone> stoneAt(int x, int y);
     }
 
-    private List<List<Optional<Stone>>> winnerForHorizontalLines(Board board) {
-        List<List<Optional<Stone>>> horizontalLines = new ArrayList<>();
-        List<Optional<Stone>> horizontalLine;
-        for (int x = 0; x < X_INTERSECTIONS - 1; x++) {
-            horizontalLine = new ArrayList<>();
-            for (int y = 0; y < Y_INTERSECTIONS - 1; y++) {
-                horizontalLine.add(board.stoneAt(intersection(x, y)));
+    private List<List<Optional<Stone>>> straightLines(StoneRetriever stoneRetriever) {
+        List<List<Optional<Stone>>> lines = new ArrayList<>();
+        List<Optional<Stone>> line;
+        for (int i = 0; i < Y_INTERSECTIONS - 1; i++) {
+            line = new ArrayList<>();
+            for (int j = 0; j < X_INTERSECTIONS - 1; j++) {
+                line.add(stoneRetriever.stoneAt(i, j));
             }
-            horizontalLines.add(horizontalLine);
+            lines.add(line);
         }
-        return horizontalLines;
-    }
-
-    private List<List<Optional<Stone>>> winnerForDiagonalLines(Board board) {
-        List<List<Optional<Stone>>> lines = diagonalTopLeftToBottomRight(board);
-        lines.addAll(diagonalTopRightToBottomLeft(board));
         return lines;
     }
 
-    private List<List<Optional<Stone>>> diagonalTopLeftToBottomRight(Board board) {
+    private List<List<Optional<Stone>>> diagonalTopLeftToBottomRight(StoneRetriever stoneRetriever) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
         for (int xOffset = 0; xOffset <= X_INTERSECTIONS - 5; xOffset++) {
             List<Optional<Stone>> line = new ArrayList<>();
             for (int x = xOffset, y = 0; x <= X_INTERSECTIONS - 1; x++, y++) {
-                line.add(board.stoneAt(Board.intersection(x, y)));
+                line.add(stoneRetriever.stoneAt(x, y));
             }
             lines.add(line);
         }
@@ -66,19 +52,19 @@ public class Rules {
         for (int yOffset = 0; yOffset <= Y_INTERSECTIONS - 5; yOffset++) {
             List<Optional<Stone>> line = new ArrayList<>();
             for (int x = 0, y = yOffset; y <= Y_INTERSECTIONS - 1; x++, y++) {
-                line.add(board.stoneAt(Board.intersection(x, y)));
+                line.add(stoneRetriever.stoneAt(x, y));
             }
             lines.add(line);
         }
         return lines;
     }
 
-    private List<List<Optional<Stone>>> diagonalTopRightToBottomLeft(Board board) {
+    private List<List<Optional<Stone>>> diagonalTopRightToBottomLeft(StoneRetriever stoneRetriever) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
         for (int xOffset = X_INTERSECTIONS - 1; xOffset >= 4; xOffset--) {
             List<Optional<Stone>> line = new ArrayList<>();
             for (int x = xOffset, y = 0; x >= 0; x--, y++) {
-                line.add(board.stoneAt(Board.intersection(x, y)));
+                line.add(stoneRetriever.stoneAt(x, y));
             }
             lines.add(line);
         }
@@ -86,7 +72,7 @@ public class Rules {
         for (int yOffset = 0; yOffset <= Y_INTERSECTIONS - 5; yOffset++) {
             List<Optional<Stone>> line = new ArrayList<>();
             for (int x = X_INTERSECTIONS - 1, y = yOffset; y <= Y_INTERSECTIONS - 1; x--, y++) {
-                line.add(board.stoneAt(Board.intersection(x, y)));
+                line.add(stoneRetriever.stoneAt(x, y));
             }
             lines.add(line);
         }
@@ -94,14 +80,11 @@ public class Rules {
     }
 
     private Optional<Player> winnerFor(List<List<Optional<Stone>>> lines) {
-        Optional<Player> winner = Optional.empty();
-        for (List<Optional<Stone>> line : lines) {
-            winner = winnerForLine(line);
-            if (winner.isPresent()) {
-                return winner;
-            }
-        }
-        return winner;
+        return lines.stream()
+                    .map((boardLine) -> winnerForLine(boardLine))
+                    .filter((player) -> player.isPresent())
+                    .findAny()
+                    .orElseGet(Optional::empty);
     }
 
     private Optional<Player> winnerForLine(List<Optional<Stone>> boardLine) {
