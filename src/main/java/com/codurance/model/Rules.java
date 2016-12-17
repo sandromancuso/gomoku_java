@@ -29,9 +29,9 @@ public class Rules {
     private List<List<Optional<Stone>>> straightLines(StoneRetriever stoneRetriever) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
         List<Optional<Stone>> line;
-        for (int i = 0; i < Y_INTERSECTIONS - 1; i++) {
+        for (int i = 0; i < X_INTERSECTIONS - 1; i++) {
             line = new ArrayList<>();
-            for (int j = 0; j < X_INTERSECTIONS - 1; j++) {
+            for (int j = 0; j < Y_INTERSECTIONS - 1; j++) {
                 line.add(stoneRetriever.stoneAt(i, j));
             }
             lines.add(line);
@@ -41,8 +41,9 @@ public class Rules {
 
     private List<List<Optional<Stone>>> diagonalTopLeftToBottomRight(StoneRetriever stoneRetriever) {
         List<List<Optional<Stone>>> lines = new ArrayList<>();
+        List<Optional<Stone>> line;
         for (int xOffset = 0; xOffset <= X_INTERSECTIONS - 5; xOffset++) {
-            List<Optional<Stone>> line = new ArrayList<>();
+            line = new ArrayList<>();
             for (int x = xOffset, y = 0; x <= X_INTERSECTIONS - 1; x++, y++) {
                 line.add(stoneRetriever.stoneAt(x, y));
             }
@@ -50,7 +51,7 @@ public class Rules {
         }
 
         for (int yOffset = 0; yOffset <= Y_INTERSECTIONS - 5; yOffset++) {
-            List<Optional<Stone>> line = new ArrayList<>();
+            line = new ArrayList<>();
             for (int x = 0, y = yOffset; y <= Y_INTERSECTIONS - 1; x++, y++) {
                 line.add(stoneRetriever.stoneAt(x, y));
             }
@@ -81,8 +82,8 @@ public class Rules {
 
     private Optional<Player> winnerFor(List<List<Optional<Stone>>> lines) {
         return lines.stream()
-                    .map((boardLine) -> winnerForLine(boardLine))
-                    .filter((player) -> player.isPresent())
+                    .map(this::winnerForLine)
+                    .filter(Optional::isPresent)
                     .findAny()
                     .orElseGet(Optional::empty);
     }
