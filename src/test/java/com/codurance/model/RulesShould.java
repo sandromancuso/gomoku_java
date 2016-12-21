@@ -3,6 +3,8 @@ package com.codurance.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static com.codurance.model.BoardBuilder.*;
 import static com.codurance.model.Player.BLACK;
 import static com.codurance.model.Player.WHITE;
@@ -10,6 +12,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class RulesShould {
+
+    private Player NO_WINNER = null;
 
     private Rules rules;
 
@@ -22,7 +26,7 @@ public class RulesShould {
     return_no_winner_where_no_players_have_five_in_a_row() {
         Board emptyBoard = new Board();
 
-        assertThat(rules.winner(emptyBoard).isPresent(), is(false));
+        assertThat(winnerForThe(emptyBoard), is(NO_WINNER));
     }
 
     @Test public void
@@ -34,12 +38,12 @@ public class RulesShould {
         assertThat(winnerForThe(board), is(WHITE));
 
         board = aBoard().with(horizontalStones(4, 1, BLACK)).build();
-        assertThat(rules.winner(board).isPresent(), is(false));
+        assertThat(winnerForThe(board), is(NO_WINNER));
 
         board = aBoard()
                     .with(horizontalStones(4, 2, BLACK))
                     .with(horizontalStones(2, 5, 2, WHITE)).build();
-        assertThat(rules.winner(board).isPresent(), is(false));
+        assertThat(winnerForThe(board), is(NO_WINNER));
     }
 
     @Test public void
@@ -51,12 +55,12 @@ public class RulesShould {
         assertThat(winnerForThe(board), is(WHITE));
 
         board = aBoard().with(verticalStones(4, 1, BLACK)).build();
-        assertThat(rules.winner(board).isPresent(), is(false));
+        assertThat(winnerForThe(board), is(NO_WINNER));
 
         board = aBoard()
-                .with(verticalStones(4, 2, BLACK))
-                .with(verticalStones(2, 5, 2, WHITE)).build();
-        assertThat(rules.winner(board).isPresent(), is(false));
+                    .with(verticalStones(4, 2, BLACK))
+                    .with(verticalStones(2, 5, 2, WHITE)).build();
+        assertThat(winnerForThe(board), is(NO_WINNER));
     }
 
     @Test public void
@@ -66,7 +70,7 @@ public class RulesShould {
                             .with(whiteStones(at(12, 12)))
                             .with(blackStones(at(13, 13), at(14, 14)))
                             .build();
-        assertThat(rules.winner(board).isPresent(), is(false));
+        assertThat(winnerForThe(board), is(NO_WINNER));
     }
 
     @Test public void
@@ -148,9 +152,8 @@ public class RulesShould {
     }
 
     private Player winnerForThe(Board board) {
-        return rules.winner(board).get();
+        Optional<Player> winner = rules.winner(board);
+        return (winner.isPresent()) ? winner.get() : NO_WINNER;
     }
-
-
 
 }
