@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.codurance.model.Board.intersection;
+import static com.codurance.model.BoardBuilder.*;
 import static com.codurance.model.Player.BLACK;
 import static com.codurance.model.Player.WHITE;
 import static org.hamcrest.core.Is.is;
@@ -66,85 +67,90 @@ public class RulesShould {
     }
 
     @Test public void
-    return_winner_when_five_consecutive_stones_in_a_diagonal() {
-        placeStone(0, 0, BLACK);
-        placeStone(1, 1, BLACK);
-        placeStone(2, 2, BLACK);
-        placeStone(3, 3, BLACK);
-        placeStone(4, 4, BLACK);
-        assertThat(rules.winner(board).get(), is(BLACK));
-
-        resetBoard();
-        placeStone(10, 10, BLACK);
-        placeStone(11, 11, BLACK);
-        placeStone(12, 12, BLACK);
-        placeStone(13, 13, BLACK);
-        placeStone(14, 14, BLACK);
-        assertThat(rules.winner(board).get(), is(BLACK));
-
-        resetBoard();
-        placeStone(4, 0, BLACK);
-        placeStone(5, 1, BLACK);
-        placeStone(6, 2, BLACK);
-        placeStone(7, 3, BLACK);
-        placeStone(8, 4, BLACK);
-        assertThat(rules.winner(board).get(), is(BLACK));
-
-        resetBoard();
-        placeStone(10, 10, BLACK);
-        placeStone(11, 11, BLACK);
-        placeStone(12, 12, WHITE);
-        placeStone(13, 13, BLACK);
-        placeStone(14, 14, BLACK);
+    return_no_winner_when_containing_five_consecutive_stones_from_different_players() {
+        Board board = aBoard()
+                            .with(blackStones(at(10, 10), at(11, 11)))
+                            .with(whiteStones(at(12, 12)))
+                            .with(blackStones(at(13, 13), at(14, 14)))
+                            .build();
         assertThat(rules.winner(board).isPresent(), is(false));
+    }
 
-        resetBoard();
-        placeStone(0, 10, BLACK);
-        placeStone(1, 11, BLACK);
-        placeStone(2, 12, BLACK);
-        placeStone(3, 13, BLACK);
-        placeStone(4, 14, BLACK);
+    @Test public void
+    return_winner_when_five_consecutive_stones_in_a_diagonal() {
+        board = aBoard().with(blackStones(
+                                at(0, 0),
+                                at(1, 1),
+                                at(2, 2),
+                                at(3, 3),
+                                at(4, 4))).build();
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        board = aBoard().with(blackStones(
+                                at(10, 10),
+                                at(11, 11),
+                                at(12, 12),
+                                at(13, 13),
+                                at(14, 14))).build();
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        board = aBoard().with(blackStones(
+                                at(4, 0),
+                                at(5, 1),
+                                at(6, 2),
+                                at(7, 3),
+                                at(8, 4))).build();
+        assertThat(rules.winner(board).get(), is(BLACK));
+
+        board = aBoard().with(blackStones(
+                                at(0, 10),
+                                at(1, 11),
+                                at(2, 12),
+                                at(3, 13),
+                                at(4, 14))).build();
         assertThat(rules.winner(board).get(), is(BLACK));
     }
 
     @Test public void
     return_winner_when_five_consecutive_stones_in_an_anti_diagonal() {
-        placeStone(14, 0, BLACK);
-        placeStone(13, 1, BLACK);
-        placeStone(12, 2, BLACK);
-        placeStone(11, 3, BLACK);
-        placeStone(10, 4, BLACK);
+        board = aBoard().with(blackStones(
+                                at(14, 0),
+                                at(13, 1),
+                                at(12, 2),
+                                at(11, 3),
+                                at(10, 4))).build();
         assertThat(rules.winner(board).get(), is(BLACK));
 
-        resetBoard();
-        placeStone(9, 0, BLACK);
-        placeStone(8, 1, BLACK);
-        placeStone(7, 2, BLACK);
-        placeStone(6, 3, BLACK);
-        placeStone(5, 4, BLACK);
+        board = aBoard().with(blackStones(
+                                at(9, 0),
+                                at(8, 1),
+                                at(7, 2),
+                                at(6, 3),
+                                at(5, 4))).build();
         assertThat(rules.winner(board).get(), is(BLACK));
 
-        resetBoard();
-        placeStone(10, 10, BLACK);
-        placeStone(11, 11, BLACK);
-        placeStone(12, 12, BLACK);
-        placeStone(13, 13, BLACK);
-        placeStone(14, 14, BLACK);
+        board = aBoard().with(blackStones(
+                                at(10, 10),
+                                at(11, 11),
+                                at(12, 12),
+                                at(13, 13),
+                                at(14, 14))).build();
         assertThat(rules.winner(board).get(), is(BLACK));
 
-        resetBoard();
-        placeStone(0, 10, BLACK);
-        placeStone(1, 11, BLACK);
-        placeStone(2, 12, BLACK);
-        placeStone(3, 13, BLACK);
-        placeStone(4, 14, BLACK);
+        board = aBoard().with(blackStones(
+                                at(0, 10),
+                                at(1, 11),
+                                at(2, 12),
+                                at(3, 13),
+                                at(4, 14))).build();
         assertThat(rules.winner(board).get(), is(BLACK));
 
-        placeStone(12, 7, BLACK);
-        placeStone(11, 8, BLACK);
-        placeStone(10, 9, BLACK);
-        placeStone( 9, 10, BLACK);
-        placeStone( 8, 11, BLACK);
+        board = aBoard().with(blackStones(
+                                at(12, 7),
+                                at(11, 8),
+                                at(10, 9),
+                                at(9, 10),
+                                at(8, 11))).build();
         assertThat(rules.winner(board).get(), is(BLACK));
     }
 
