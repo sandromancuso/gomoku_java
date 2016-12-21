@@ -20,19 +20,11 @@ public class BoardBuilder {
     }
 
     static List<Stone> blackStones(Board.Intersection... intersections) {
-        List<Stone> stones = new ArrayList<>();
-        for (Board.Intersection intersection : intersections) {
-            stones.add(new Stone(intersection, BLACK));
-        }
-        return stones;
+        return stones((intersection) -> new Stone(intersection, BLACK), intersections);
     }
 
     static List<Stone> whiteStones(Board.Intersection... intersections) {
-        List<Stone> stones = new ArrayList<>();
-        for (Board.Intersection intersection : intersections) {
-            stones.add(new Stone(intersection, WHITE));
-        }
-        return stones;
+        return stones((intersection) -> new Stone(intersection, WHITE), intersections);
     }
 
     static Board.Intersection at(int x, int y) {
@@ -73,6 +65,19 @@ public class BoardBuilder {
         for (Stone stone : stones) {
             board.placeStoneAt(stone.intersection(), stone.player());
         }
+    }
+
+    interface CreateStone {
+        Stone create(Board.Intersection intersection);
+    }
+
+    private static List<Stone> stones(CreateStone createStone, Board.Intersection... intersections) {
+        List<Stone> stones = new ArrayList<>();
+        for (Board.Intersection intersection : intersections) {
+            stones.add(createStone.create(intersection));
+        }
+        return stones;
+
     }
 
 }
