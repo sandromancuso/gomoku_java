@@ -39,6 +39,30 @@ public class BoardBuilder {
         return Board.intersection(x, y).get();
     }
 
+    static List<Stone> horizontalStones(int numberOfStones, int xOffset, int y, Player player) {
+        List<Stone> stones = new ArrayList<>();
+        for (int x = xOffset; x < numberOfStones + xOffset; x++) {
+            stones.add(new Stone(at(x, y), player));
+        }
+        return stones;
+    }
+
+    static List<Stone> horizontalStones(int numberOfStones, int y, Player player) {
+        return horizontalStones(numberOfStones, 0, y, player);
+    }
+
+    static List<Stone> verticalStones(int numberOfStones, int yOffset, int x, Player player) {
+        List<Stone> stones = new ArrayList<>();
+        for (int y = yOffset; y < numberOfStones + yOffset; y++) {
+            stones.add(new Stone(at(x, y), player));
+        }
+        return stones;
+    }
+
+    static List<Stone> verticalStones(int numberOfStones, int x, Player player) {
+        return verticalStones(numberOfStones, 0, x, player);
+    }
+
     Board build() {
         Board board = new Board();
         addStonesTo(board);
